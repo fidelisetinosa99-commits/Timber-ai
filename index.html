@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TIMBER SUPER APP - AI + TRACK + SECURITY</title>
+<style>
+*{box-sizing:border-box}
+body{background:#07111f;color:#fff;font-family:Arial,sans-serif;margin:0}
+header{text-align:center;padding:15px 10px 5px;position:sticky;top:0;background:#07111f;z-index:10}
+header h1{color:#00ff99;margin:0;font-size:28px}
+nav{display:flex;gap:6px;justify-content:center;margin:12px 0;flex-wrap:wrap}
+button.tab{background:#1e293b;color:#fff;border:0;padding:10px 14px;border-radius:20px;cursor:pointer;font-weight:bold}
+button.tab.active{background:#00ff99;color:#000}
+main{max-width:620px;margin:0 auto;padding:12px}
+.card{background:#12243a;padding:18px;border-radius:16px;margin-bottom:14px}
+.card.highlight{border:2px solid #00ff99}
+h2{margin-top:0;font-size:18px}
+textarea,input,select{width:100%;padding:12px;border-radius:10px;border:none;margin:8px 0;font-size:15px}
+textarea{height:80px;resize:none}
+button{width:100%;background:#00ff99;border:0;padding:13px;border-radius:10px;font-weight:bold;font-size:15px;margin:6px 0;cursor:pointer;color:#000}
+button.purple{background:#a855f7;color:#fff}
+button.blue{background:#38bdf8}
+button.green{background:#25D366}
+button.grey{background:#334155;color:#fff}
+.small{font-size:13px;opacity:.8;line-height:1.5}
+.green{color:#00ff99;word-break:break-all}
+img{width:100%;border-radius:12px;margin-top:10px}
+footer{text-align:center;font-size:12px;opacity:.6;padding:15px}
+</style>
+</head>
+<body>
+<header>
+<h1>⚡ TIMBER SUPER APP</h1>
+<p>AI • TRACK • SECURITY • FOOTBALL</p>
+<nav>
+<button class="tab active" onclick="showTab('ai',this)">🤖 AI</button>
+<button class="tab" onclick="showTab('track',this)">📍 TRACK</button>
+<button class="tab" onclick="showTab('security',this)">🔐 SECURITY</button>
+<button class="tab" onclick="showTab('football',this)">⚽ FOOTBALL</button>
+</nav>
+</header>
+
+<main>
+<!-- AI TAB -->
+<div id="tab-ai" class="page">
+<div class="card">
+<h2>🤖 TIMBER AI - Image & Video</h2>
+<textarea id="prompt" placeholder="Describe... e.g. A lion in Warri wearing agbada, cinematic"></textarea>
+<select id="style">
+<option>Realistic photo, high detail</option>
+<option>Cartoon style</option>
+<option>Anime style</option>
+<option>3D Pixar style</option>
+<option>Cinematic, movie lighting</option>
+</select>
+<select id="size">
+<option value="1024x1024">Square 1024x1024</option>
+<option value="1024x1792">Portrait - Phone Wallpaper</option>
+<option value="1792x1024">Landscape - Wide</option>
+</select>
+<button onclick="genImage()">🎨 GENERATE IMAGE</button>
+<button class="purple" onclick="genVideoPrompt()">🎬 GENERATE VIDEO PROMPT</button>
+<button class="grey" onclick="surprise()">🎲 SURPRISE ME</button>
+<p id="status"></p>
+<img id="result" style="display:none">
+<div id="videoBox"></div>
+</div>
+</div>
+
+<!-- TRACK TAB -->
+<div id="tab-track" class="page" style="display:none">
+<div class="card">
+<h2>📍 GPS - MY LOCATION ONLY</h2>
+<p class="small">This only gets YOUR phone location with YOUR permission. E no fit track another person.</p>
+<button onclick="getLocation()">📍 GET MY GPS</button>
+<button class="grey" onclick="simulate()">SIMULATE TEST COORDS</button>
+<p id="location">Ready to acquire GPS</p>
+</div>
+<div class="card">
+<h2>👨‍👩‍👧 SHARE MY LOCATION WITH FAMILY</h2>
+<p class="small">1. Tap GET MY GPS first<br>2. Tap SHARE below<br>3. Send for WhatsApp</p>
+<button class="green" onclick="shareMyLocation()">💬 SHARE ON WHATSAPP</button>
+<p id="shareStatus" class="small"></p>
+</div>
+<div class="card">
+<h2>🌐 MY PUBLIC IP</h2>
+<p class="small">IP location na rough city (e fit show Onitsha even if you dey Warri) because na MTN server location e dey show.</p>
+<button class="blue" onclick="getIP()">CHECK MY IP</button>
+<p id="ip">Not checked</p>
+<p id="ipExplain" class="small"></p>
+</div>
+</div>
+
+<!-- SECURITY TAB -->
+<div id="tab-security" class="page" style="display:none">
+<div class="card">
+<h2>🔐 PASSWORD CHECKER</h2>
+<input id="pass" type="password" placeholder="Enter password to check" oninput="checkPassword()">
+<p id="security">Enter a password first</p>
+</div>
+<div class="card">
+<h2>🔑 PASSWORD GENERATOR</h2>
+<button onclick="generate()">GENERATE STRONG PASSWORD</button>
+<p id="generated" class="green"></p>
+<button class="grey" onclick="copyPass()">📋 COPY PASSWORD</button>
+</div>
+<div class="card">
+<h2>🛡️ SAFETY TIPS</h2>
+<p class="small">• Never share your OTP / password<br>• Never post your IP or live location publicly<br>• Use 2FA for WhatsApp & Facebook<br>• If person say "I fit track you", na lie - unless you press Allow</p>
+</div>
+</div>
+
+<!-- FOOTBALL TAB -->
+<div id="tab-football" class="page" style="display:none">
+<div class="card highlight">
+<h2>🏆 NIGERIA 2 - 1 JAPAN</h2>
+<p><b>FIFA U-17 Women's World Cup Final</b><br>Sat Nov 7, 2026 • Rabat, Morocco</p>
+<p>⚽ 39' Awawu Bashiru - 1-0<br>⚽ 47' Oluebube Umejiaku - 2-0<br>⚽ 80' Fuki Ito (Japan) - 2-1</p>
+<p class="small">Flamingos = First African team EVER to win U-17 Women's World Cup! First team to lose first match and still win trophy.</p>
+<button onclick="genFlamingos()">🎨 GENERATE FLAMINGOS CELEBRATION IMAGE</button>
+</div>
+<div class="card">
+<h2>🏆 SUPER FALCONS - 10x CHAMPIONS</h2>
+<p><b>WAFCON Final:</b> Nigeria 3-2 Morocco<br>Comeback from 2-0 down! 10 Finals, 10 Wins.</p>
+</div>
+</div>
+</main>
+
+<footer>TIMBER SUPER APP • Made by Timber • Warri, Nigeria</footer>
+
+<script>
+// TABS
+function showTab(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+  document.getElementById('tab-'+id).style.display='block';
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+// AI IMAGE
+function genImage(){
+  let p=document.getElementById('prompt').value.trim();
+  let s=document.getElementById('style').value;
+  let size=document.getElementById('size').value.split('x');
+  if(!p){alert('Type wetin you want first!');return;}
+  document.getElementById('status').innerText='Generating... wait 5-10 sec...';
+  let full=encodeURIComponent(p+', '+s+', high quality, detailed, 4k');
+  let img=document.getElementById('result');
+  img.src='https://image.pollinations.ai/prompt/'+full+'?width='+size[0]+'&height='+size[1]+'&seed='+Math.floor(Math.random()*999999)+'&nologo=true';
+  img.style.display='block';
+  img.onload=()=>document.getElementById('status').innerText='Done! Long-press to save.';
+}
+function genVideoPrompt(){
+  let p=document.getElementById('prompt').value.trim();
+  if(!p){alert('Type video idea first!');return;}
+  let vp=p+', cinematic camera movement, smooth motion, realistic lighting, 4k, 8 seconds';
+  document.getElementById('videoBox').innerHTML='<div style="background:#000;padding:12px;border-radius:10px;margin-top:10px"><b>🎬 Video Prompt:</b><br><br>'+vp+'<br><br><button onclick="navigator.clipboard.writeText(\''+vp.replace(/'/g,"")+'\');alert(\'Copied!\')">📋 COPY</button><p class="small">Paste in Google Veo / Runway / Pika / Kling</p></div>';
+}
+function surprise(){
+  let ideas=['A Nigerian boy flying over Warri with superpowers, sunset','Super Falcons celebrating World Cup trophy in stadium','A lion wearing Agbada sitting on throne','Futuristic Lagos in 2050, flying cars','Flamingos girls lifting World Cup trophy, confetti'];
+  document.getElementById('prompt').value=ideas[Math.floor(Math.random()*ideas.length)];
+  genImage();
+}
+function genFlamingos(){
+  document.getElementById('prompt').value='Nigeria Flamingos U17 girls lifting FIFA Women World Cup trophy, confetti, stadium, celebrating, cinematic';
+  showTab('ai',document.querySelector('.tab'));
+  genImage();
+}
+// TRACK
+let myLat=null,myLon=null;
+function getLocation(){
+  if(!navigator.geolocation){document.getElementById('location').innerText='GPS not supported';return;}
+  document.getElementById('location').innerText='Getting location... allow permission';
+  navigator.geolocation.getCurrentPosition(pos=>{
+    myLat=pos.coords.latitude; myLon=pos.coords.longitude;
+    document.getElementById('location').innerHTML='Lat: '+myLat+'<br>Lon: '+myLon+'<br><a style="color:#00ff99" target="_blank" href="https://maps.google.com/?q='+myLat+','+myLon+'">OPEN MAP</a>';
+    document.getElementById('shareStatus').innerText='Location ready! Now tap SHARE.';
+  },()=>document.getElementById('location').innerText='Permission denied.');
+}
+function simulate(){
+  myLat=5.5545; myLon=5.7930;
+  document.getElementById('location').innerHTML='SIMULATED (Test Warri):<br>Lat: 5.5545<br>Lon: 5.7930<br>This na test, no be real.';
+}
+function shareMyLocation(){
+  if(!myLat){alert('Tap GET MY GPS first!');return;}
+  let msg='Hi, this is my current location (I share am by myself): https://maps.google.com/?q='+myLat+','+myLon;
+  let url='https://wa.me/?text='+encodeURIComponent(msg);
+  document.getElementById('shareStatus').innerHTML='Opening WhatsApp... <a style="color:#25D366" href="'+url+'" target="_blank">CLICK HERE IF E NO OPEN</a>';
+  window.open(url,'_blank');
+}
+async function getIP(){
+  document.getElementById('ip').innerText='Loading...';
+  try{
+    let r=await fetch('https://api.ipify.org?format=json'); let d=await r.json();
+    document.getElementById('ip').innerText='Your IP: '+d.ip;
+    document.getElementById('ipExplain').innerText='IP location fit show Onitsha even if you dey Warri - na MTN server location, no be your real place. GPS na the real one.';
+  }catch(e){document.getElementById('ip').innerText='Could not retrieve IP';}
+}
+// SECURITY
+function checkPassword(){
+  let p=document.getElementById('pass').value; let score=0;
+  if(p.length>=8)score++; if(/[A-Z]/.test(p))score++; if(/[a-z]/.test(p))score++; if(/[0-9]/.test(p))score++; if(/[^A-Za-z0-9]/.test(p))score++;
+  let r=['Very weak','Weak','Fair','Good','Strong','Very strong'];
+  document.getElementById('security').innerText=p.length?r[score]:'Enter a password first';
+}
+function generate(){
+  let chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*'; let res=''; let bytes=new Uint32Array(20); crypto.getRandomValues(bytes);
+  for(let i=0;i<20;i++) res+=chars[bytes[i]%chars.length];
+  document.getElementById('generated').innerText=res;
+}
+function copyPass(){
+  let t=document.getElementById('generated').innerText;
+  if(!t){alert('Generate first!');return;}
+  navigator.clipboard.writeText(t); alert('Copied!');
+}
+</script>
+</body>
+</html>
