@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TIMBER AI STUDIO</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#090b14;color:#fff;font-family:Arial,sans-serif}
+header{padding:18px;background:#111526;border-bottom:1px solid #252b40}
+.logo{font-size:23px;font-weight:900;color:#a78bfa}
+.logo span{color:#fff}
+header p{color:#929bb2;font-size:12px;margin:5px 0 0}
+main{max-width:950px;margin:auto;padding:18px}
+h2{font-size:23px}
+.muted{color:#929bb2;font-size:13px}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:20px 0}
+.tab{background:#171d30;color:#bfc7dc;border:1px solid #29314b;
+padding:12px 3px;border-radius:10px;font-size:12px}
+.tab.active{background:#6845d9;color:white;border-color:#a78bfa}
+.panel{background:#111729;border:1px solid #29314b;border-radius:15px;padding:17px}
+textarea,input{width:100%;background:#090e1c;color:white;border:1px solid #303952;border-radius:10px;padding:13px;font-size:14px}
+textarea{min-height:110px;resize:vertical}
+button{cursor:pointer}
+.primary{background:#7954ed;color:white;border:0;padding:14px;border-radius:10px;font-weight:bold;width:100%;margin-top:12px}
+.secondary{background:#222b42;color:white;border:1px solid #384461;padding:12px;border-radius:9px}
+.upload{display:block;background:#090e1c;padding:15px;border:1px dashed #626e8e;border-radius:10px;margin:12px 0}
+.preview{margin-top:15px;min-height:100px;background:#090e1c;border-radius:10px;padding:14px;white-space:pre-wrap;overflow-wrap:anywhere}
+.preview img,.preview video{max-width:100%;border-radius:10px}
+.status{font-size:12px;color:#a78bfa;margin-top:12px}
+.hidden{display:none}
+footer{text-align:center;color:#78839e;font-size:12px;padding:30px}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">TIMBER <span>AI STUDIO</span></div>
+ <p>Your all-in-one artificial intelligence creative studio</p>
+</header>
+
+<main>
+ <h2>What are we creating today?</h2>
+ <p class="muted">Chat, imagine, create videos and bring your stories to life.</p>
+
+ <div class="tabs">
+  <button class="tab active" onclick="showTab('chat',this)">💬 Chat</button>
+  <button class="tab" onclick="showTab('image',this)">🎨 Image</button>
+  <button class="tab" onclick="showTab('video',this)">🎬 Video</button>
+  <button class="tab" onclick="showTab('voice',this)">🎙️ Voice</button>
+ </div>
+
+ <section id="chat" class="panel">
+  <h3>💬 TIMBER AI Chat</h3>
+  <p class="muted">Ask questions, write stories, brainstorm and learn.</p>
+  <div id="chatHistory" class="preview">Welcome to TIMBER AI. What would you like to create?</div>
+  <textarea id="chatPrompt" placeholder="Message TIMBER AI..."></textarea>
+  <button class="primary" onclick="generate('chat')">Send message ↑</button>
+ </section>
+
+ <section id="image" class="panel hidden">
+  <h3>🎨 AI Image Generator</h3>
+  <p class="muted">Describe the picture you want to generate.</p>
+  <textarea id="imagePrompt" placeholder="A realistic Nigerian superhero standing on a skyscraper at sunset, cinematic lighting..."></textarea>
+  <button class="primary" onclick="generate('image')">✨ Generate image</button>
+  <div id="imageResult" class="preview">Your generated image will appear here.</div>
+ </section>
+
+ <section id="video" class="panel hidden">
+  <h3>🎬 AI Video Generator</h3>
+  <p class="muted">Turn your imagination into moving scenes.</p>
+  <textarea id="videoPrompt" placeholder="A cinematic footballer scores a bicycle kick in a packed stadium..."></textarea>
+  <label class="upload">Reference image (optional)
+   <input type="file" id="videoFile" accept="image/*">
+  </label>
+  <button class="primary" onclick="generate('video')">🎥 Generate video</button>
+  <div id="videoResult" class="preview">Your generated video will appear here.</div>
+ </section>
+
+ <section id="voice" class="panel hidden">
+  <h3>🎙️ AI Voice Studio</h3>
+  <p class="muted">Turn your script into spoken audio.</p>
+  <textarea id="voicePrompt" placeholder="Enter the dialogue you want spoken..."></textarea>
+  <button class="primary" onclick="generate('voice')">🔊 Generate voice</button>
+  <div id="voiceResult" class="preview">Your generated voice will appear here.</div>
+ </section>
+
+ <p class="status" id="status">● Frontend ready — AI services not connected yet.</p>
+</main>
+
+<footer>© 2026 TIMBER AI STUDIO · Built for creators</footer>
+
+<script>
+function showTab(name,button){
+ document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));
+ document.getElementById(name).classList.remove('hidden');
+ document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+ button.classList.add('active');
+}
+
+async function generate(type){
+ const fields={
+  chat:'chatPrompt',
+  image:'imagePrompt',
+  video:'videoPrompt',
+  voice:'voicePrompt'
+ };
+ const output={
+  chat:'chatHistory',
+  image:'imageResult',
+  video:'videoResult',
+  voice:'voiceResult'
+ };
+ const prompt=document.getElementById(fields[type]).value.trim();
+ const result=document.getElementById(output[type]);
+ const status=document.getElementById('status');
+
+ if(!prompt){
+  status.textContent='Please enter a prompt first.';
+  return;
+ }
+
+ status.textContent='Connecting to '+type+' AI...';
+ result.textContent='Waiting for secure AI backend connection...';
+
+ try{
+  const response=await fetch('/api/'+type,{
+   method:'POST',
+   headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({prompt})
+  });
+
+  if(!response.ok) throw new Error('AI service unavailable');
+  const data=await response.json();
+
+  if(type==='image' && data.imageUrl){
+   result.innerHTML='';
+   const img=document.createElement('img');
+   img.src=data.imageUrl;
+   img.alt='Generated image';
+   result.appendChild(img);
+  }else if(type==='video' && data.videoUrl){
+   result.innerHTML='';
+   const video=document.createElement('video');
+   video.src=data.videoUrl;
+   video.controls=true;
+   result.appendChild(video);
+  }else if(type==='voice' && data.audioUrl){
+   result.innerHTML='';
+   const audio=document.createElement('audio');
+   audio.src=data.audioUrl;
+   audio.controls=true;
+   result.appendChild(audio);
+  }else{
+   result.textContent=data.text || data.result || 'No result returned.';
+  }
+  status.textContent='Generation completed.';
+ }catch(error){
+  result.textContent='AI backend is not connected yet. We will connect the real AI engines in the next step.';
+  status.textContent='Frontend ready. Backend connection required.';
+ }
+}
+</script>
+</body>
+</html>
